@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agrin Krasniqi · Video Editor for Brands and Creators</title>
+<meta name="description" content="Four years, 1,000+ videos, millions of views. Short-form and commercial edits that hold viewers and ship on your deadline. Based in Prishtina, working anywhere.">
+<link rel="canonical" href="https://agrinkrasniqi.com/">
+<meta name="theme-color" content="#131315">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Agrin Krasniqi · Video Editor for Brands and Creators">
+<meta property="og:description" content="Four years, 1,000+ videos, millions of views. Short-form and commercial edits that hold viewers and ship on your deadline.">
+<meta property="og:url" content="https://agrinkrasniqi.com/">
+<meta property="og:image" content="https://agrinkrasniqi.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agrin Krasniqi · Video Editor for Brands and Creators">
+<meta name="twitter:description" content="Four years, 1,000+ videos, millions of views. Short-form and commercial edits that hold viewers and ship on your deadline.">
+<meta name="twitter:image" content="https://agrinkrasniqi.com/og-image.jpg">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Agrin Krasniqi",
+  "jobTitle": "Senior Video Editor",
+  "url": "https://agrinkrasniqi.com/",
+  "email": "mailto:agrin.krasniqi@gmail.com",
+  "telephone": "+38349135959",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Prishtina",
+    "addressCountry": "XK"
+  },
+  "knowsLanguage": ["Albanian", "English"]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#131315;
+    --surface:#1b1b1e;
+    --surface-2:#222227;
+    --line:#313136;
+    --text:#f0efec;
+    --muted:#a8a8b0;
+    --muted-2:#6e6e76;
+    --tally:#e5342a;
+    --scope:#34c77a;
+    --f-display:"Space Grotesk", sans-serif;
+    --f-body:"Inter", sans-serif;
+    --edge:clamp(20px,5vw,72px);
+    --maxw:1080px;
+  }
+  html{font-size:95%}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--text);font-family:var(--f-body);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--tally);color:var(--ink)}
+  img{max-width:100%;display:block}
+
+  .skip-link{position:absolute;left:16px;top:-60px;z-index:200;background:var(--tally);color:#fff;font-weight:600;font-size:14px;padding:10px 16px;border-radius:6px;transition:top .18s ease}
+  .skip-link:focus{top:16px}
+
+  /* Scrolling timeline background */
+  .timeline-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .timeline-bg .lane{position:absolute;left:-10%;right:-10%;background-repeat:repeat-x}
+  .timeline-bg .ruler{top:8%;height:14px;
+    background-image:repeating-linear-gradient(90deg, rgba(240,239,236,.06) 0 1px, transparent 1px 40px);
+    background-position-x:calc(var(--scroll-x,0px) * .15);
+  }
+  .timeline-bg .v1{top:19%;height:46px;
+    background-image:repeating-linear-gradient(90deg,
+      rgba(229,52,42,.07) 0 160px, rgba(229,52,42,.025) 160px 214px,
+      transparent 214px 220px,
+      transparent 220px 300px, rgba(229,52,42,.06) 300px 420px,
+      transparent 420px 426px, transparent 426px 500px);
+    background-position-x:calc(var(--scroll-x,0px) * .35);
+  }
+  .timeline-bg .v2{top:29%;height:34px;
+    background-image:repeating-linear-gradient(90deg,
+      rgba(52,199,122,.06) 0 190px, transparent 190px 196px,
+      rgba(52,199,122,.03) 196px 340px, transparent 340px 346px);
+    background-position-x:calc(var(--scroll-x,0px) * .24);
+  }
+  .timeline-bg .a1{top:37%;height:22px;
+    background-image:repeating-linear-gradient(90deg, rgba(240,239,236,.05) 0 2px, transparent 2px 12px);
+    background-position-x:calc(var(--scroll-x,0px) * .5);
+  }
+  .timeline-bg .playhead{position:absolute;top:6%;bottom:56%;left:64%;width:2px;
+    background:var(--tally);opacity:.3;box-shadow:0 0 12px 1px rgba(229,52,42,.2);
+    transition:opacity .12s ease, box-shadow .12s ease;
+  }
+  .timeline-bg .playhead::before{
+    content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+    width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;
+    border-top:9px solid var(--tally);opacity:.9;
+  }
+  @keyframes cut-blink{
+    0%,100%{opacity:.3;box-shadow:0 0 12px 1px rgba(229,52,42,.2);width:2px}
+    25%,75%{opacity:.48;box-shadow:0 0 14px 2px rgba(229,52,42,.255);width:2.2px}
+    50%{opacity:.34;box-shadow:0 0 12px 1px rgba(229,52,42,.2);width:2px}
+  }
+  .timeline-bg .playhead.flash{animation:cut-blink .36s ease-in-out}
+  .timeline-bg .new-clip{position:absolute;left:64%;width:0;opacity:0;border-radius:3px;
+    transition:width .32s cubic-bezier(.2,.8,.2,1), opacity .32s ease;
+  }
+  .timeline-bg .new-clip.video{background:rgba(229,52,42,.16);border:1px solid rgba(229,52,42,.3)}
+  .timeline-bg .new-clip.audio{background:rgba(240,239,236,.1);border:1px solid rgba(240,239,236,.18)}
+  @keyframes clip-blink{0%,100%{opacity:1}50%{opacity:.82}}
+  .timeline-bg .new-clip.grown{opacity:1;animation:clip-blink .22s ease-in-out 2}
+
+  .page{position:relative;z-index:1}
+  @media(max-width:760px){
+    .timeline-bg{opacity:.7}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .timeline-bg{display:none}
+  }
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--edge)}
+
+  .topbar{padding:20px var(--edge);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+  .topbar .mark{font-family:var(--f-display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+  .topbar .cta{font-size:.92rem;color:var(--muted);border-bottom:1px solid transparent;transition:color .15s ease,border-color .15s ease}
+  .topbar .cta:hover{color:var(--text);border-color:var(--text)}
+
+  section{padding:64px 0}
+  h2{font-family:var(--f-display);font-weight:600;font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:-.01em;line-height:1.1;margin-bottom:12px;max-width:22ch}
+  .section-lede{color:var(--muted);max-width:56ch;margin-bottom:34px;font-size:1.02rem}
+
+  /* Hero */
+  .hero{padding:72px 0 0}
+  .hero .kicker{color:var(--muted);font-size:.95rem;margin-bottom:20px}
+  .hero h1{
+    font-family:var(--f-display);font-weight:700;font-size:clamp(3rem,9vw,6.4rem);
+    line-height:.98;letter-spacing:-.02em;margin-bottom:16px;
+    clip-path:inset(0 100% 0 0);
+    animation:wipe-in 1s cubic-bezier(.65,0,.35,1) .15s forwards;
+  }
+  @keyframes wipe-in{to{clip-path:inset(0 0 0 0)}}
+  .hero .role{font-size:clamp(1.05rem,2.2vw,1.3rem);color:var(--muted);margin-bottom:20px;max-width:36ch}
+  .hero .lede{max-width:54ch;font-size:1.08rem;color:#d7d6d2;margin-bottom:30px}
+  .cta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:52px}
+  .btn{display:inline-flex;align-items:center;gap:10px;font-size:.95rem;font-weight:500;padding:12px 22px;border-radius:8px;border:1px solid var(--line);transition:transform .15s ease,border-color .15s ease,background .15s ease}
+  .btn.primary{background:var(--tally);color:#fff;border-color:var(--tally)}
+  .btn.primary:hover{transform:translateY(-2px);background:#ff5b49}
+  .btn.ghost:hover{border-color:var(--text);transform:translateY(-2px)}
+  .btn:focus-visible{outline:2px solid var(--tally);outline-offset:3px}
+
+  .specs{display:flex;flex-wrap:wrap;border-top:1px solid var(--line)}
+  .spec{padding:18px 28px 18px 0;border-right:1px solid var(--line);flex:1;min-width:140px}
+  .spec:last-child{border-right:none}
+  .spec-n{display:block;font-family:var(--f-display);font-weight:700;font-size:clamp(1.8rem,3.4vw,2.4rem);letter-spacing:-.02em}
+  .spec-l{display:block;color:var(--muted);font-size:.88rem;margin-top:6px}
+
+  /* Creators */
+  .creator-row{padding:26px 0;border-bottom:1px solid var(--line)}
+  .creator-row:first-of-type{border-top:1px solid var(--line)}
+  .creator-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:8px}
+  .creator-head h3{font-family:var(--f-display);font-weight:600;font-size:1.5rem;letter-spacing:-.01em}
+  .creator-niche{color:var(--tally);font-size:.9rem}
+  .creator-desc{color:var(--muted);max-width:58ch;margin-bottom:16px}
+  .reels{display:grid;grid-template-columns:repeat(3,minmax(0,140px));gap:12px}
+  .reel.wide{grid-column:1/-1;max-width:420px}
+  .reel{position:relative;aspect-ratio:9/16;border-radius:10px;overflow:hidden;background:#000;border:1px solid var(--line);cursor:pointer;padding:0;display:block;width:100%}
+  .reel.square{aspect-ratio:1/1}
+  .reel.wide{aspect-ratio:16/9}
+  .reel .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:40px;height:40px;border-radius:99px;background:rgba(19,19,21,.6);backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;transition:background .15s ease,transform .15s ease}
+  .reel:hover .play{background:var(--tally);transform:translate(-50%,-50%) scale(1.08)}
+  .reel .play::before{content:"";width:0;height:0;border-left:11px solid var(--text);border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px}
+  .reel:hover .play::before{border-left-color:#fff}
+  .reel .rlabel{position:absolute;left:8px;bottom:8px;font-size:10px;color:var(--text);background:rgba(19,19,21,.6);padding:3px 7px;border-radius:5px}
+  .reel:focus-visible{outline:2px solid var(--tally);outline-offset:2px}
+  .reel video{width:100%;height:100%;object-fit:cover;display:block;background:#000}
+  .reel iframe{width:100%;height:100%;border:0;display:block}
+  .reel .embed-fallback{position:absolute;left:6px;right:6px;bottom:6px;text-align:center;
+    font-size:10px;color:var(--text);background:rgba(19,19,21,.72);padding:5px 6px;border-radius:5px;
+    pointer-events:auto;z-index:2;
+  }
+  .reel .embed-fallback:hover{background:rgba(19,19,21,.9)}
+
+  /* Experience */
+  .exp-list{border-top:1px solid var(--line)}
+  .exp-row{display:grid;grid-template-columns:160px 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line)}
+  .exp-date{color:var(--muted);font-size:.95rem;padding-top:4px}
+  .exp-body h3{font-family:var(--f-display);font-weight:600;font-size:1.3rem;letter-spacing:-.01em;margin-bottom:4px}
+  .exp-org{color:var(--tally);font-size:.95rem;margin-bottom:8px}
+  .exp-body p:last-child{color:var(--muted);max-width:60ch;font-size:.98rem}
+
+  /* Toolkit */
+  .toolkit-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .toolkit-grid h3{font-family:var(--f-display);font-weight:600;font-size:1.15rem;margin-bottom:14px}
+  .craft-text{color:var(--muted);max-width:44ch;margin-bottom:18px}
+  .langs{display:flex;flex-direction:column;gap:6px}
+  .langs span{color:var(--muted);font-size:.95rem}
+  .langs b{color:var(--text);font-weight:600}
+  .soft-list{display:flex;flex-direction:column;gap:12px}
+  .soft-row{display:flex;align-items:center;gap:16px}
+  .soft-name{flex:0 0 130px;font-size:.95rem}
+  .soft-bar{flex:1;height:3px;background:var(--line);border-radius:99px;overflow:hidden}
+  .soft-bar i{display:block;height:100%;background:var(--tally);border-radius:99px}
+
+  /* Contact */
+  .contact{text-align:left;border-top:1px solid var(--line)}
+  .contact h2{max-width:16ch}
+  .contact p{color:var(--muted);max-width:44ch;margin-bottom:28px}
+  .contact-row{display:flex;flex-wrap:wrap;gap:16px}
+
+  footer{border-top:1px solid var(--line);padding:20px var(--edge);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted-2)}
+
+  @media(max-width:760px){
+    .toolkit-grid{grid-template-columns:1fr;gap:30px}
+    .exp-row{grid-template-columns:1fr;gap:6px}
+    .reels{grid-template-columns:repeat(3,1fr)}
+    section{padding:48px 0}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .hero h1{clip-path:none}
+  }
+</style>
+</head>
+<body>
+  <div class="timeline-bg" aria-hidden="true">
+    <span class="lane ruler"></span>
+    <span class="lane v1"></span>
+    <span class="lane v2"></span>
+    <span class="lane a1"></span>
+    <span class="playhead"></span>
+  </div>
+
+  <div class="page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <span class="mark">Agrin Krasniqi</span>
+    <a class="cta" href="#contact">Start a project</a>
+  </header>
+
+  <main id="main">
+
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker">Prishtina, Kosovo — open for new projects</p>
+      <h1>Edits built to<br>retain attention.</h1>
+      <p class="role">Senior video editor for brands and creators</p>
+      <p class="lede">I cut short-form and commercial video that holds viewers to the last frame. Four years in, past 1,000 videos and millions of views, shipped on the deadline you set.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#contact">Start your project</a>
+        <a class="btn ghost" href="#creators">See the work ↓</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="specs">
+        <div class="spec"><span class="spec-n">4+</span><span class="spec-l">Years editing</span></div>
+        <div class="spec"><span class="spec-n">1,000+</span><span class="spec-l">Videos cut</span></div>
+        <div class="spec"><span class="spec-n">Millions</span><span class="spec-l">Views earned</span></div>
+        <div class="spec"><span class="spec-n">6</span><span class="spec-l">Editing tools</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="creators">
+    <div class="wrap">
+      <div class="creator-row">
+        <div class="creator-head"><h3>DigitalHive</h3><span class="creator-niche">Advertising Agency</span></div>
+        <p class="creator-desc">Ad creatives for multiple clients across different industries, cut to each brand's own voice.</p>
+        <div class="reels">
+          <button class="reel wide needs-video" data-video="videos/YlliRealEstate_25032026_Final.mp4" aria-label="Example short for DigitalHive"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for DigitalHive"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for DigitalHive"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+        </div>
+      </div>
+
+      <div class="creator-row">
+        <div class="creator-head"><h3>Freelance Projects</h3><span class="creator-niche">Independent Work</span></div>
+        <p class="creator-desc">Standalone projects taken on outside any agency or ongoing client relationship.</p>
+        <div class="reels">
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Freelance Projects"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Freelance Projects"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Freelance Projects"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+        </div>
+      </div>
+
+      <h2 style="margin-top:44px">Creators &amp; brands I edit for</h2>
+      <p class="section-lede">People and companies I've cut short-form for, across construction, true crime, gaming, and advertising.</p>
+
+      <div class="creator-row">
+        <div class="creator-head"><h3>Perkins Brothers Building</h3><span class="creator-niche">Construction · Build</span></div>
+        <p class="creator-desc">Job-site and build-process content, cut to show the craft and the progress.</p>
+        <div class="reels">
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Perkins Brothers Building"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Perkins Brothers Building"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Perkins Brothers Building"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+        </div>
+      </div>
+
+      <div class="creator-row">
+        <div class="creator-head"><h3>Mcskyz</h3><span class="creator-niche">True Crime</span></div>
+        <p class="creator-desc">True crime storytelling and case breakdowns, paced to keep viewers hooked.</p>
+        <div class="reels">
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Mcskyz"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Mcskyz"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Mcskyz"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+        </div>
+      </div>
+
+      <div class="creator-row">
+        <div class="creator-head"><h3>Gamology</h3><span class="creator-niche">Gaming</span></div>
+        <p class="creator-desc">Highlight reels and montages timed to the action.</p>
+        <div class="reels">
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Gamology"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Gamology"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+          <button class="reel needs-video" data-drive="" aria-label="Example short for Gamology"><span class="play" aria-hidden="true"></span><span class="rlabel">Add video</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="wrap">
+      <h2>Where I've worked</h2>
+      <p class="section-lede">Four years across an agency, a media house, and freelance work.</p>
+      <div class="exp-list">
+        <div class="exp-row">
+          <div class="exp-date">2025 – 2026</div>
+          <div class="exp-body">
+            <h3>Video Editor</h3>
+            <p class="exp-org">DigitalHive, Marketing Agency</p>
+            <p>Engaged with clients to understand their needs and deliver work that matched their brand.</p>
+          </div>
+        </div>
+        <div class="exp-row">
+          <div class="exp-date">2021 – 2025</div>
+          <div class="exp-body">
+            <h3>Senior Video Editor</h3>
+            <p class="exp-org">Ura Media</p>
+            <p>Cut 700-plus videos across food, arts and crafts, true crime, gaming, UGC, and education. Ran several productions at once and reached millions of viewers.</p>
+          </div>
+        </div>
+        <div class="exp-row">
+          <div class="exp-date">Freelance</div>
+          <div class="exp-body">
+            <h3>Video Editor</h3>
+            <p class="exp-org">Wonderwork</p>
+            <p>Edited podcasts, festival productions, and creator content from first cut to final delivery.</p>
+          </div>
+        </div>
+        <div class="exp-row">
+          <div class="exp-date">2019 – 2022</div>
+          <div class="exp-body">
+            <h3>3D Artist</h3>
+            <p class="exp-org">Character &amp; Motion</p>
+            <p>Rigged characters, wired up motion capture, and presented finished creative projects.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="toolkit">
+    <div class="wrap">
+      <h2>Toolkit &amp; craft</h2>
+      <div class="toolkit-grid">
+        <div>
+          <h3>Craft</h3>
+          <p class="craft-text">Editing and storytelling come first, backed by motion graphics, color correction, sound design, and social content built for how people actually watch — with a workflow that holds up under a deadline.</p>
+          <div class="langs">
+            <span>Albanian — <b>Native</b></span>
+            <span>English — <b>Professional</b></span>
+          </div>
+        </div>
+        <div>
+          <h3>Software</h3>
+          <div class="soft-list">
+            <div class="soft-row"><span class="soft-name">Premiere Pro</span><span class="soft-bar"><i style="width:100%"></i></span></div>
+            <div class="soft-row"><span class="soft-name">After Effects</span><span class="soft-bar"><i style="width:80%"></i></span></div>
+            <div class="soft-row"><span class="soft-name">DaVinci Resolve</span><span class="soft-bar"><i style="width:80%"></i></span></div>
+            <div class="soft-row"><span class="soft-name">Photoshop</span><span class="soft-bar"><i style="width:80%"></i></span></div>
+            <div class="soft-row"><span class="soft-name">Illustrator</span><span class="soft-bar"><i style="width:60%"></i></span></div>
+            <div class="soft-row"><span class="soft-name">Blender</span><span class="soft-bar"><i style="width:60%"></i></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <h2>Have footage that needs a final cut?</h2>
+      <p>Based in Prishtina, working with brands and creators anywhere. Send the brief and the footage, and I'll send back a cut that performs.</p>
+      <div class="contact-row">
+        <a class="btn primary" href="mailto:agrin.krasniqi@gmail.com">agrin.krasniqi@gmail.com</a>
+        <a class="btn ghost" href="tel:+38349135959">+383 49 135 959</a>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <footer>
+    <span>Agrin Krasniqi © 2026</span>
+    <span>Senior Video Editor · Prishtina, KS</span>
+  </footer>
+  </div>
+
+<script>
+  // Reel buttons support four hosting methods, chosen per button:
+  //   data-video="/videos/clip.mp4"   → self-hosted file (or any direct file
+  //                                      URL, e.g. Cloudinary's raw delivery
+  //                                      URL), native <video> tag
+  //   data-yt="dQw4w9WgXcQ"           → unlisted YouTube video ID
+  //   data-drive="<drive share link>" → Google Drive file ID or full share link
+  //   data-embed="<player embed URL>" → any other embeddable player URL
+  //                                      (iframe-based), loaded as-is
+  // Priority when more than one is set: video > yt > drive > embed.
+  // A button with none of the four stays an inert "Add video" placeholder.
+  function extractDriveId(input){
+    if(!input) return null;
+    const fileMatch = input.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+    if(fileMatch) return fileMatch[1];
+    const idParamMatch = input.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+    if(idParamMatch) return idParamMatch[1];
+    return input.trim();
+  }
+  document.querySelectorAll('.reel').forEach(function(b){
+    const videoSrc = b.getAttribute('data-video');
+    const ytId = b.getAttribute('data-yt');
+    const driveId = extractDriveId(b.getAttribute('data-drive'));
+    const embedUrl = b.getAttribute('data-embed');
+
+    if(!videoSrc && !ytId && !driveId && !embedUrl){
+      b.setAttribute('aria-disabled', 'true');
+      return;
+    }
+
+    b.classList.remove('needs-video');
+    b.addEventListener('click', function(){
+      let embedHtml;
+      if(videoSrc){
+        // Direct file URL (self-hosted or Cloudinary's raw delivery URL):
+        // no iframe, no external library, no fallback needed — this just plays.
+        embedHtml = '<video src="'+videoSrc+'" controls autoplay playsinline></video>';
+      } else if(ytId){
+        embedHtml = '<iframe src="https://www.youtube-nocookie.com/embed/'+ytId+'?autoplay=1&playsinline=1&rel=0" title="Example short" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>'
+          + '<a class="embed-fallback" href="https://youtu.be/'+ytId+'" target="_blank" rel="noopener">Open on YouTube ↗</a>';
+      } else if(driveId){
+        embedHtml = '<iframe src="https://drive.google.com/file/d/'+driveId+'/preview" title="Example short" allow="autoplay" allowfullscreen></iframe>'
+          + '<a class="embed-fallback" href="https://drive.google.com/file/d/'+driveId+'/view" target="_blank" rel="noopener">Open on Drive ↗</a>';
+      } else {
+        embedHtml = '<iframe src="'+embedUrl+'" title="Example short" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>'
+          + '<a class="embed-fallback" href="'+embedUrl+'" target="_blank" rel="noopener">Open player ↗</a>';
+      }
+      b.innerHTML = embedHtml;
+      b.style.cursor = 'default';
+    }, {once:true});
+  });
+
+  // Scrolling timeline background: lanes drift sideways as you scroll,
+  // the fixed playhead flashes on each "cut", and a new clip piece grows
+  // onto the timeline at the playhead as you scroll down — scrolling back
+  // up reverses it, shrinking the most recent piece back out instead of
+  // adding a new one.
+  //
+  // Everything below runs off a single continuous requestAnimationFrame
+  // loop rather than the browser's scroll event, and reads a *smoothed*
+  // scroll position (smoothY) instead of the raw value. That keeps motion
+  // synced to the display's refresh rate and free of the stutter you can
+  // get from scroll-event timing, which varies by browser/input device.
+  (function(){
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduceMotion) return;
+    var root = document.documentElement;
+    var bg = document.querySelector('.timeline-bg');
+    var playhead = bg.querySelector('.playhead');
+    var clipWidth = 220;      // matches the v1 lane's block spacing
+    var laneSpeed = 0.35;     // matches the v1 lane's parallax speed
+    var lastBucket = 0;
+    var clipStack = [];       // {el, createdY, speed} — ordered oldest to newest
+    var smoothY = window.scrollY;
+    var lastSmoothY = smoothY;
+    var offsetTarget = 0;
+    var offsetCurrent = 0;
+
+    function flashPlayhead(){
+      if(!playhead) return;
+      playhead.classList.remove('flash');
+      void playhead.offsetWidth; // force reflow so the animation restarts every time
+      playhead.classList.add('flash');
+    }
+
+    function growClip(){
+      if(clipStack.length > 7) return; // keep it compact, don't let it pile up
+      var onVideo = clipStack.length % 2 === 0;
+      var el = document.createElement('span');
+      el.className = 'new-clip ' + (onVideo ? 'video' : 'audio');
+      el.style.top = onVideo ? '19%' : '37%';
+      el.style.height = onVideo ? '46px' : '22px';
+      var speed = onVideo ? 0.35 : 0.5;
+      var targetWidth = 45 + Math.round(Math.random() * 45);
+      bg.appendChild(el);
+      requestAnimationFrame(function(){
+        el.style.width = targetWidth + 'px';
+        el.classList.add('grown');
+      });
+      clipStack.push({el:el, createdY:smoothY, speed:speed});
+    }
+
+    function shrinkLastClip(){
+      var c = clipStack.pop();
+      if(!c) return;
+      c.el.style.width = '0px';
+      c.el.classList.remove('grown');
+      window.setTimeout(function(){ c.el.remove(); }, 340);
+    }
+
+    function frame(){
+      // Ease the tracked position toward the real scroll position every
+      // frame instead of jumping to it — this is what removes the jumps.
+      var targetY = window.scrollY;
+      smoothY += (targetY - smoothY) * 0.28;
+      if(Math.abs(targetY - smoothY) < 0.05) smoothY = targetY;
+
+      root.style.setProperty('--scroll-x', (-smoothY) + 'px');
+
+      var deltaY = smoothY - lastSmoothY;
+      lastSmoothY = smoothY;
+      offsetTarget = Math.max(-1.25, Math.min(1.25, offsetTarget + deltaY * 0.0625));
+      offsetTarget *= 0.9;
+      offsetCurrent += (offsetTarget - offsetCurrent) * 0.15;
+      if(playhead) playhead.style.transform = 'translateX(' + offsetCurrent.toFixed(2) + 'px)';
+
+      var bucket = Math.floor((smoothY * laneSpeed) / clipWidth);
+      if(bucket > lastBucket){
+        lastBucket = bucket;
+        flashPlayhead();
+        growClip();
+      } else if(bucket < lastBucket){
+        lastBucket = bucket;
+        flashPlayhead();
+        shrinkLastClip();
+      }
+
+      for(var i = clipStack.length - 1; i >= 0; i--){
+        var c = clipStack[i];
+        var dx = -((smoothY - c.createdY) * c.speed);
+        c.el.style.transform = 'translateX(' + dx + 'px)';
+        if(dx < -window.innerWidth * 1.2){
+          c.el.remove();
+          clipStack.splice(i, 1);
+        }
+      }
+
+      window.requestAnimationFrame(frame);
+    }
+    window.requestAnimationFrame(frame);
+  })();
+</script>
+</body>
+</html>
